@@ -1,0 +1,76 @@
+
+1: get  mosquitto from net
+http://mosquitto.org
+
+2: unzip mosquitto
+cd ~/github/
+mkdir mosquitto
+cd mosquitto/
+tar xzf mosquitto-1.4.2.tar.gz 
+
+3: Getting a Git Repository for mosquitto
+browse https://github.com by explorer of QQ, Chrome, or IE, an so on
+user 
+password 
+In the upper-right corner of any page, click "+" right of user(deluruan), and then click New repository.
+Create a short, memorable name for your repository. For example, "hello-world". this is "mosquitto-1.4.2" and create repository
+the resitory is: https://github.com/deluruan/mosquitto-1.4.2.git
+
+4: push mosquitto to github
+cd mosquitto-1.4.2/
+git init
+git add *
+git commit -m 'git mosquitto initial project version'
+git remote add origin https://github.com/deluruan/mosquitto-1.4.2.git
+git push
+
+5: compile and link for linux
+install openssl and libc-ares-dev, libc-ares2
+# sudo apt-get install openssl
+# sudo apt-get install libssl-dev build-essential zlibc zlib-bin libidn11-dev libidn11
+# dpkg --list | grep ares ##to look for correlating libraries
+$ sudo apt-get install libc-ares-dev ,neccesory
+$ sudo apt-get install libc-ares2 , not neccesory
+$ sudo apt-get install uuid-dev
+# make clean;make
+
+6: error while loading shared libraries
+# sudo gvim /etc/ld.so.conf
+# the file of ld.so.conf
+include /etc/ld.so.conf.d/*.conf
+/home/rdlhht/github/mosquitto/mosquitto-1.4.2/lib
+# sudo /sbin/ldconfig
+
+7: run mosquitto in linux
+# src/mosquitto -v
+open a new terminal to run mosquitto_sub
+# ./client/mosquitto_sub -h 192.168.48.48 -t test -i 7532 -d
+open another new terminal to run mosquitto_pub
+# ./client/mosquitto_pub -h 192.168.48.48 -t test -m "123456"
+
+8: compile and link for msd901
+# cd ~/msd6a901/android/jb_4.2/
+# source env.sh 
+# lunch 10 #version for ed
+# cd ~/github/mosquitto/mosquitto-1.4.2/
+# gvim config.mk #git log of "add cross-compilation to compile android in config.mk,Makefile,c,h"
+
+9: run mosquitto_sub in msd901
+export ADBCMD=/home/rdlhht/adt-bundle-linux-x86_64-20131030/sdk/platform-tools/adb
+export MSD901IPADDR=192.168.48.56 #ip of msd901
+cp ~/github/mosquitto/mosquitto-1.4.2/lib/libmosquitto.so .
+cp ~/github/mosquitto/mosquitto-1.4.2/client/mosquitto_sub .
+
+${ADBCMD} kill-server
+${ADBCMD} connect ${MSD901IPADDR}
+${ADBCMD} -s ${MSD901IPADDR}:5555 root
+${ADBCMD} connect ${MSD901IPADDR}
+${ADBCMD} -s ${MSD901IPADDR}:5555 remount
+
+${ADBCMD} -s ${MSD901IPADDR}:5555 push ./client/mosquitto_sub /system/bin
+${ADBCMD} -s ${MSD901IPADDR}:5555 shell chmod 777 /system/bin/mosquitto_sub
+${ADBCMD} -s ${MSD901IPADDR}:5555 push ./lib/libmosquitto.so /system/lib
+
+/system/bin/mosquitto_sub  -t test -h 192.168.48.50 -i 643 -d #in minicom of msd901
+
+
