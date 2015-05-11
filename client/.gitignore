@@ -1,0 +1,11 @@
+#*.cmd
+#*.order
+#*.o
+#*.builtin
+#*.mod.c
+#mstar/mstar/fusion/fusion.ko
+#mstar/mstar/fusion_8_10/fusion_8_10.ko
+#mstar/mstar/ir/mdrv-ir.ko
+#3.1.10/include/linux/fusion.h
+mosquitto_pub
+mosquitto_sub

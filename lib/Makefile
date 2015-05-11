@@ -20,29 +20,27 @@ MOSQ_OBJS=mosquitto.o \
 		  util_mosq.o \
 		  will_mosq.o
 
-all : libmosquitto.so.${SOVERSION} libmosquitto.a
+all : libmosquitto.so libmosquitto.a
 	$(MAKE) -C cpp
 
 install : all
 	$(INSTALL) -d ${DESTDIR}$(prefix)/lib${LIB_SUFFIX}/
-	$(INSTALL) -s --strip-program=${CROSS_COMPILE}${STRIP} libmosquitto.so.${SOVERSION} ${DESTDIR}${prefix}/lib${LIB_SUFFIX}/libmosquitto.so.${SOVERSION}
-	ln -sf libmosquitto.so.${SOVERSION} ${DESTDIR}${prefix}/lib${LIB_SUFFIX}/libmosquitto.so
+	$(INSTALL) -s --strip-program=${CROSS_COMPILE}${STRIP} libmosquitto.so ${DESTDIR}${prefix}/lib${LIB_SUFFIX}/libmosquitto.so
 	$(INSTALL) -d ${DESTDIR}${prefix}/include/
 	$(INSTALL) mosquitto.h ${DESTDIR}${prefix}/include/mosquitto.h
 	$(MAKE) -C cpp install
 
 uninstall :
-	-rm -f ${DESTDIR}${prefix}/lib${LIB_SUFFIX}/libmosquitto.so.${SOVERSION}
 	-rm -f ${DESTDIR}${prefix}/lib${LIB_SUFFIX}/libmosquitto.so
 	-rm -f ${DESTDIR}${prefix}/include/mosquitto.h
 
 reallyclean : clean
 
 clean :
-	-rm -f *.o libmosquitto.so.${SOVERSION} libmosquitto.so libmosquitto.a
+	-rm -f *.o libmosquitto.so libmosquitto.so libmosquitto.a
 	$(MAKE) -C cpp clean
 
-libmosquitto.so.${SOVERSION} : ${MOSQ_OBJS}
+libmosquitto.so : ${MOSQ_OBJS}
 	${CROSS_COMPILE}$(CC) -shared $(LIB_LDFLAGS) $^ -o $@ ${LIB_LIBS}
 
 libmosquitto.a : ${MOSQ_OBJS}

@@ -1,6 +1,11 @@
 include config.mk
 
 DIRS=lib client src
+# ruandelu 20150511 bgn
+ifeq ($(UNAME),ANDROID)
+DIRS:=lib client
+endif
+# ruandelu 20150511 end
 DOCDIRS=man
 DISTDIRS=man
 
@@ -14,6 +19,7 @@ docs :
 binary : mosquitto
 
 mosquitto :
+	echo "001 " $(UNAME) $(DIRS)
 ifeq ($(UNAME),Darwin)
 	$(error Please compile using CMake on Mac OS X)
 endif

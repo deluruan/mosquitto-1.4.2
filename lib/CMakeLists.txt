@@ -67,7 +67,6 @@ target_link_libraries(libmosquitto ${LIBRARIES})
 set_target_properties(libmosquitto PROPERTIES
 	OUTPUT_NAME mosquitto
 	VERSION ${VERSION}
-	SOVERSION 1
 )
 
 install(TARGETS libmosquitto RUNTIME DESTINATION ${BINDIR} LIBRARY DESTINATION ${LIBDIR})

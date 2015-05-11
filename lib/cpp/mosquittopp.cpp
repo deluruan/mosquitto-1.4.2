@@ -14,7 +14,11 @@ Contributors:
    Roger Light - initial implementation and documentation.
 */
 
-#include <cstdlib>
+// ruandelu 20150511 bgn
+//#include <cstdlib>
+#include <stdlib.h>
+// ruandelu 20150511 end
+
 #include <mosquitto.h>
 #include <mosquittopp.h>
 

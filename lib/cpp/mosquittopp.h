@@ -27,7 +27,10 @@ Contributors:
 #	define mosqpp_EXPORT
 #endif
 
-#include <cstdlib>
+// ruandelu 20150511 bgn
+//#include <cstdlib>
+#include <stdlib.h>
+// ruandelu 20150511 end
 #include <time.h>
 #include <mosquitto.h>
 

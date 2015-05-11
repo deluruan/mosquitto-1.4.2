@@ -37,7 +37,12 @@ Contributors:
 #endif
 
 #ifdef WITH_SRV
+#ifdef ANDROID
 #  include <ares.h>
+#else
+#  include <ares.h>
+#endif
+
 #endif
 
 #ifdef WIN32

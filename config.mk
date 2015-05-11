@@ -87,7 +87,6 @@ VERSION=1.4.2
 TIMESTAMP:=$(shell date "+%F %T%z")
 
 # Client library SO version. Bump if incompatible API/ABI changes are made.
-SOVERSION=1
 
 # Man page generation requires xsltproc and docbook-xsl
 XSLTPROC=xsltproc
@@ -96,7 +95,11 @@ DB_HTML_XSL=man/html.xsl
 
 #MANCOUNTRIES=en_GB
 
-UNAME:=$(shell uname -s)
+#UNAME:=$(shell uname -s)
+#ruandelu 20150511 and compile to ANDROID bgn
+UNAME:=ANDROID
+#UNAME:=ANDROID #ruandelu 20150511 and compile to ANDROID; note not this line, UNAME is "ANDROID " but not "ANDROID"
+#ruandelu 20150511 and compile to ANDROID end
 
 ifeq ($(UNAME),SunOS)
 	ifeq ($(CC),cc)
@@ -122,13 +125,39 @@ else
 endif
 LIB_LIBS:=
 PASSWD_LIBS:=
+# ruandelu 20150511 bgn
+ifeq ($(UNAME),ANDROID)
+#	DIR_ANDROID_OBJ:=/home/rdlhht/haoyun/release/out/target/product/rk30sdk/obj
+#	DIR_ANDROID_OBJ:=/home/rdlhht/msd6a918/android/jb_4.3/out/target/product/mstarnapoli_uc/obj
+	DIR_ANDROID_OBJ:=/home/rdlhht/msd6a901/android/jb_4.2/out/target/product/mstaredison_ed/obj
+	export SYSROOT=$(NDK)/platforms/android-14/arch-arm
+	export CC=arm-linux-androideabi-gcc --sysroot=$(SYSROOT)
+	export CXX=arm-linux-androideabi-g++ --sysroot=$(SYSROOT)
+	#export CC=arm-linux-androideabi-gcc
+	#export CXX=arm-linux-androideabi-g++
+endif
+# ruandelu 20150511 end
 
 ifeq ($(UNAME),Linux)
 	BROKER_LIBS:=$(BROKER_LIBS) -lrt -Wl,--dynamic-list=linker.syms
 	LIB_LIBS:=$(LIB_LIBS) -lrt
 endif
+# ruandelu 20150511 bgn
+ifeq ($(UNAME),ANDROID)
+	WITH_TLS:=no
+	WITH_SRV:=no
+	WITH_THREADING:=no
+	CLIENT_CFLAGS:=$(CLIENT_CFLAGS) -DANDROID
+	CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib ../lib/libmosquitto.so
+endif
+# ruandelu 20150511 end
 
-CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib ../lib/libmosquitto.so.${SOVERSION}
+# ruandelu 20150511 bgn
+ifeq ($(UNAME),Linux)
+CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib ../lib/libmosquitto.so
+#CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib ../lib/libmosquitto.a
+endif
+# ruandelu 20150511 end
 
 ifeq ($(UNAME),SunOS)
 	ifeq ($(CC),cc)
@@ -148,7 +177,7 @@ else
 endif
 
 ifneq ($(UNAME),SunOS)
-	LIB_LDFLAGS:=$(LIB_LDFLAGS) -Wl,--version-script=linker.version -Wl,-soname,libmosquitto.so.$(SOVERSION)
+	LIB_LDFLAGS:=$(LIB_LDFLAGS) -Wl,--version-script=linker.version -Wl,-soname,libmosquitto.so
 endif
 
 ifeq ($(UNAME),QNX)

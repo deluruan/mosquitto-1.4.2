@@ -10,16 +10,16 @@ mosquitto_pub : pub_client.o client_shared.o
 mosquitto_sub : sub_client.o client_shared.o
 	${CROSS_COMPILE}${CC} $^ -o $@ ${CLIENT_LDFLAGS}
 
-pub_client.o : pub_client.c ../lib/libmosquitto.so.${SOVERSION}
+pub_client.o : pub_client.c ../lib/libmosquitto.so
 	${CROSS_COMPILE}${CC} -c $< -o $@ ${CLIENT_CFLAGS}
 
-sub_client.o : sub_client.c ../lib/libmosquitto.so.${SOVERSION}
+sub_client.o : sub_client.c ../lib/libmosquitto.so
 	${CROSS_COMPILE}${CC} -c $< -o $@ ${CLIENT_CFLAGS}
 
 client_shared.o : client_shared.c client_shared.h
 	${CROSS_COMPILE}${CC} -c $< -o $@ ${CLIENT_CFLAGS}
 
-../lib/libmosquitto.so.${SOVERSION} :
+../lib/libmosquitto.so :
 	$(MAKE) -C ../lib
 
 install : all
